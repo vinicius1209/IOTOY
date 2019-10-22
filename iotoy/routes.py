@@ -330,9 +330,9 @@ def text_to_speech_list():
         return jsonify(response)
 
 
-@app.route('/text_to_speech/get/<int:toy>', methods=['GET'])
+@app.route('/teste', methods=['GET'])
 @login_required
-def text_to_speech_get(toy):
+def text_to_speech_get():
     filename = '1braco_direito'
     return send_from_directory(app.config['SOUNDS_URL'], filename, as_attachment=True)
     #return send_file("static\sounds\{}.wav".format(sound[0]), mimetype='audio/wav', as_attachment=True, attachment_filename="{}.wav".format(sound[0]))
