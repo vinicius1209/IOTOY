@@ -6,4 +6,4 @@ class Config(object):
 	SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
 	OFENSIVE_FILE = os.path.join(basedir, 'ofensive.txt')
-	SOUNDS_URL = os.path.join(basedir, 'static/sounds')
+	SOUNDS_URL = os.path.join(basedir, 'sounds')
