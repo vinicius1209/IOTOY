@@ -50,7 +50,7 @@ const Config = {
     methods: {
         get_user_config() {
             axios
-                .get("http://10.70.15.24:5000/current_user/config")
+                .get("http://iotoy.herokuapp.com/current_user/config")
                 .then(
                     response => (
                         this.api_key = response.data.api_key,
@@ -66,7 +66,7 @@ const Config = {
             if (this.$refs.form.validate()) {
                 axios
                     .post(
-                        "http://10.70.15.24:5000/current_user/config",
+                        "http://iotoy.herokuapp.com/current_user/config",
                         {
                             api_key: this.api_key,
                             api_url: this.api_url

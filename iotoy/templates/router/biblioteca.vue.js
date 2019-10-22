@@ -101,7 +101,7 @@ const Biblioteca = {
             var vm = this
             home.$refs.loading.start()
             axios
-                .get("http://10.70.15.24:5000/text_to_speech/list")
+                .get("http://iotoy.herokuapp.com/text_to_speech/list")
                 .then(function (response) {
                     response.data.forEach(item => {
                         vm.list_toy.push(

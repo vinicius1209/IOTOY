@@ -91,7 +91,7 @@ const TTS = {
   methods: {
     get_list_toy() {
       axios
-        .get("http://10.70.15.24:5000/current_user/toys/get")
+        .get("http://iotoy.herokuapp.com/current_user/toys/get")
         .then(
           response => (
             ((this.responseData = response.data),
@@ -117,7 +117,7 @@ const TTS = {
     },
     get_user_config() {
       axios
-        .get("http://10.70.15.24:5000/current_user/config")
+        .get("http://iotoy.herokuapp.com/current_user/config")
         .then(
           response => (
             this.api_key = response.data.api_key,
@@ -147,7 +147,7 @@ const TTS = {
       home.$refs.loading.start()
       axios
         .post(
-          "http://10.70.15.24:5000/text_to_speech/post",
+          "http://iotoy.herokuapp.com/text_to_speech/post",
           {
             input_tts: this.input_tts,
             list_part: this.select_part,
