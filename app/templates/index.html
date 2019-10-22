@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body>
+  <v-app id="home">
+    <!-- menu -->
+    <side-menu></side-menu>
+    <v-content>
+      <router-view></router-view>
+      <notify ref="notification"></notify>
+      <loading-card ref="loading"></loading-card>
+    </v-content>
+    <v-footer color="cyan" app>
+      <span class="white--text">IOTOY &copy; 2019</span>
+    </v-footer>
+  </v-app>
+</body>
+<script>
+  {% include "components/menu.vue.js" %}
+  {% include "components/notify.vue.js" %}
+  {% include "components/loading.vue.js" %}
+  {% include "router/tts.vue.js" %}
+  {% include "router/biblioteca.vue.js" %}
+  {% include "router/toys.vue.js" %}
+  {% include "router/config.vue.js" %}
+  {% include "router/index.js" %}
+  {% include "main.js" %}
+</script>
+
+{% endblock %}

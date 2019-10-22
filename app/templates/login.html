@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body>
+  <v-app id="login">
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+          <v-flex xs12 sm8 md4>
+            <v-toolbar dark>
+              <v-toolbar-title>IOTOY</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+            
+            <v-tabs centered v-model="view">
+              <v-tab :href="`#tab-login`">
+                Entrar
+              </v-tab>
+              <v-tab :href="`#tab-signup`">
+                Registrar-se
+              </v-tab>
+            </v-tabs>
+
+            <v-tabs-items v-model="view">
+
+              <!-- Tab login -->
+              <v-tab-item :value="`tab-login`">
+                <v-card flat>
+                  <v-card-text>
+                      <v-form ref="login_form" :model="login_form" lazy-validation>
+                          <v-text-field prepend-icon="person" label="Usuário" type="text" v-model="login_form.username"
+                            :rules="login_form.rules.usernameRules" :counter="64" required></v-text-field>
+                          <v-text-field prepend-icon="lock" label="Senha" type="password" v-model="login_form.password"
+                            :rules="login_form.rules.passwordRules" required></v-text-field>
+                        </v-form>
+                  </v-card-text>
+                  <v-card-actions>
+                      <v-btn color="primary" @click="doLogin()">Entrar</v-btn>
+                  </v-card-actions>
+                </v-card>                
+              </v-tab-item>
+
+              <!-- Tab signup -->
+              <v-tab-item :value="`tab-signup`">
+                <v-card flat>
+                  <v-card-text>
+                      <v-form ref="signup_form" :model="signup_form" lazy-validation>
+                          <v-text-field prepend-icon="person" label="Usuário" type="text" v-model="signup_form.username"
+                            :rules="signup_form.rules.usernameRules" :counter="64" required></v-text-field>
+                          <v-text-field prepend-icon="lock" label="Senha" type="password" v-model="signup_form.password"
+                            :rules="signup_form.rules.passwordRules" required></v-text-field>
+                            <v-text-field prepend-icon="lock" label="Confirmar Senha" type="password" v-model="signup_form.repassword"
+                            :rules="signup_form.rules.repasswordRules" required></v-text-field>
+                          <v-text-field id="email" prepend-icon="email" label="E-mail" type="text" v-model="signup_form.email"
+                            :rules="signup_form.rules.emailRules" required></v-text-field>
+                          <v-text-field id="mac_address" prepend-icon="face" label="Código Brinquedo" type="text"
+                            v-model="signup_form.mac_address" :rules="signup_form.rules.macRules" :counter="17" required>
+                          </v-text-field>   
+                          <v-text-field id="description" prepend-icon="info" label="Descrição do Brinquedo" type="text"
+                            v-model="signup_form.description" :rules="signup_form.rules.description" :counter="30" required>
+                          </v-text-field>                  
+                        </v-form>
+                  </v-card-text>
+                  <v-card-actions>
+                      <v-btn color="primary" @click="doSignup()">Registrar</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-tab-item>
+
+            </v-tabs-items>
+            <!-- Snackbar Notification -->
+            <notify ref="notification"></notify>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-content>
+  </v-app>
+</body>
+
+<script>
+  {% include "components/notify.vue.js" %}
+  {% include "login.js" %}
+</script>
+
+{% endblock %}

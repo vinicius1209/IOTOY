@@ -1,0 +1,12 @@
+audio{
+    width: 100% !important;
+}
+
+.v-progress-linear{
+    margin: 1.8rem 0 !important;
+}
+
+.selected{
+    background-color: #2196f3 !important;
+    color: #f5f5f5;  
+}

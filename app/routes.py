@@ -1,0 +1,338 @@
+from app import app, session, db
+from app.models import User, Toy, Sound
+from flask import render_template, flash, url_for, request, abort, redirect, jsonify, send_file, make_response
+from flask_login import current_user, login_user, logout_user, login_required
+from app.watson import WatsonTTS
+from app.sounds import SoundTTS
+import os
+
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "username" not in data:
+            return abort(400)
+        if "password" not in data:
+            return abort(400)
+
+        username = data["username"]
+        password = data["password"]
+
+        user = User.query.filter_by(username=username).first()
+        
+        # Check user pass
+        if user is None: 
+            return jsonify({"status": 404, "msg": "Usuário não existente"})
+        if not user.check_password(password):
+            return jsonify({"status": 404, "msg": "Senha preenchida incorreta"})
+        
+        login_user(user)
+        return jsonify({"status": 200, "redirect": "/transformar"})
+    else:
+        if current_user.is_authenticated:
+            return redirect(url_for('home'))
+
+        return render_template('login.html')
+
+
+@app.route('/logout', methods=['GET'])
+@login_required
+def logout():
+
+    if current_user.is_authenticated:
+        logout_user()
+        return jsonify({"status": 200, "redirect": "/login"})
+
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.get_json(silent=True)
+
+    if "username" not in data:
+        return abort(400)
+    if "password" not in data:
+        return abort(400)
+    if "email" not in data:
+        return abort(400)
+    if "mac_address" not in data:
+        return abort(400)
+
+    username = data["username"]
+    password = data["password"]
+    email = data["email"]
+    mac_address = data["mac_address"]
+    description = data["description"]
+
+    try:
+        # Verifica usuário
+        user = User.query.filter_by(username=username).first()
+        if user is not None:
+            return jsonify({"status": 404, "msg": "Usuário não disponível"})
+
+        # Verifica e-mail
+        user = User.query.filter_by(email=email).first()
+        if user is not None:
+            return jsonify({"status": 404, "msg": "E-mail não disponível"})
+        
+        # Verifica brinquedo
+        toy = Toy.query.filter_by(mac_address=mac_address).first()
+        if toy is not None:
+            return jsonify({"status": 404, "msg": "Código de brinquedo já cadastrado"})
+
+        # Cria usuário e brinquedo
+        user = User(username=username, email=email)
+        user.set_password(password)        
+        db.session.add(user)
+        db.session.commit()
+
+        # Agora busca o usuário criado para criar o brinquedo
+        user = User.query.filter_by(username=username).first()
+        if user is None or not user.check_password(password):
+            return abort(500)
+
+        # Cria o brinquedo
+        toy = Toy(mac_address=mac_address, description=description, user_id=user.id)
+        db.session.add(toy)
+        db.session.commit()
+
+        return jsonify({"status": 200})
+    except Exception as e:
+        print(e)
+        return abort(500)
+
+
+@app.route('/current_user/info', methods=['GET'])
+@login_required
+def current_user_info():
+    return str(current_user.username).upper()
+
+
+@app.route('/current_user/config', methods=['GET', 'POST'])
+@login_required
+def current_user_config():
+    if request.method == 'GET':
+        response = {"api_key": current_user.api_key, "api_url": current_user.api_url}
+        return jsonify(response)
+    elif request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "api_key" not in data:
+            return abort(400)
+        if "api_url" not in data:
+            return abort(400)
+
+        user = User.query.get(current_user.id)
+        user.api_key = data["api_key"]
+        user.api_url = data["api_url"]
+        db.session.commit()
+
+        return "200"
+
+
+@app.route('/current_user/toys/get', methods=['GET'])
+@login_required
+def current_user_toys_get():
+    if request.method == 'GET':
+        user_toys = Toy.query.filter_by(user_id=current_user.id).all()
+        response = []
+        for toy in user_toys:
+            response.append({"description" : toy.description, "id": toy.id, "mac_address": toy.mac_address})
+        return jsonify(response)
+
+
+@app.route('/current_user/toys/new', methods=['POST'])
+@login_required
+def current_user_toys_new():
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "mac_address" not in data:
+            return abort(400)
+        if "description" not in data:
+            return abort(400)
+        
+        mac_address = data["mac_address"]
+        description = data["description"]
+
+        # Verifica brinquedo
+        toy = Toy.query.filter_by(mac_address=mac_address).first()
+        if toy is not None:
+            return jsonify({"status": 404, "msg": "Código de brinquedo já cadastrado"})
+
+        toy = Toy(mac_address=mac_address, description=description, user_id=current_user.id)
+        db.session.add(toy)
+        db.session.commit()
+
+        return jsonify({"status": 200})
+
+
+@app.route('/current_user/toys/edit', methods=['POST'])
+@login_required
+def current_user_toys_edit():
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "id" not in data:
+            return abort(400)
+        if "mac_address" not in data:
+            return abort(400)
+        if "description" not in data:
+            return abort(400)
+        
+        toy_id = data["id"]
+        mac_address = data["mac_address"]
+        description = data["description"]
+
+        # Verifica brinquedo para editar as informações
+        toy = Toy.query.get(toy_id)
+        if toy is None:
+            return jsonify({"status": 404, "msg": "Brinquedo não encontrado"})
+
+        toy.mac_address = mac_address
+        toy.description = description
+        db.session.commit()
+
+        return jsonify({"status": 200})
+
+
+@app.route('/current_user/toys/del', methods=['POST'])
+@login_required
+def current_user_toys_del():
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "id" not in data:
+            return abort(400)
+        
+        toy_id = data["id"]
+
+        # Verifica brinquedo para editar as informações
+        toy = Toy.query.get(toy_id)
+        if toy is None:
+            return jsonify({"status": 404, "msg": "Brinquedo não encontrado"})
+
+        db.session.delete(toy)
+        db.session.commit()
+
+        return jsonify({"status": 200})
+
+
+# Home route
+@app.route('/transformar', methods=['GET'])
+@app.route('/biblioteca', methods=['GET'])
+@app.route('/brinquedos', methods=['GET'])
+@app.route('/config', methods=['GET'])
+@login_required
+def home():
+    return render_template('index.html') 
+
+
+@app.route('/text_to_speech/post', methods=['POST'])
+@login_required
+def text_to_speech_post(): 
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+        
+        if "input_tts" not in data:
+            return abort(400)
+        if "list_part" not in data:
+            return abort(400)
+        if "toy" not in data:
+            return abort(400)
+
+        text = request.json['input_tts']
+        list_part = request.json['list_part']
+        selected_toy = request.json['toy']
+        ofensive_file = open('ofensive.txt', "r")
+        ofensive_list = ofensive_file.read().splitlines()
+
+        # Verifica palavras ofensivas
+        for word in ofensive_list:
+            if word.upper() in text.upper():
+                print('Palavra ofensiva: ' + word)
+                return jsonify({"status": "100", "word": word})  
+
+        # Verifica se o brinquedo existe
+        toy = Toy.query.get(selected_toy)
+        if not toy:
+           return abort(500) 
+
+        # Inicia a classe do Watson TTS
+        tts = WatsonTTS(current_user.api_key, current_user.api_url)
+
+        if not tts:
+            return abort(500)
+
+        # Cria um arquivo de áudio para cada parte selecionada
+        for part in list_part:
+            try:
+                # Cria o content pelo serviço da IBM
+                content = tts.create(text)
+                if content is None:
+                    raise Exception('Erro ao gerar os sons pelo content ser None')
+                # Criar o arquivo em disco
+                file_name = str(toy.id) + str(part)
+                file_sound = SoundTTS(file_name, content).create()
+                if file_sound:
+                    sound = Sound.query.filter_by(file_name=file_name, toy_id=toy.id).first()
+                    if not sound:
+                        # Criar o som na base se ele nao existir ainda
+                        sound = Sound(file_name=file_name, part=part, toy_id=selected_toy)
+                        db.session.add(sound)
+                        db.session.commit()
+                else:
+                    raise Exception('Erro ao gerar os sons')
+            except Exception as e:
+                print(e)
+                return abort(500)
+        
+        return jsonify({"status": "200"})
+
+    
+@app.route('/text_to_speech/list', methods=['GET', 'POST'])
+@login_required
+def text_to_speech_list(): 
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "toy" not in data:
+            return abort(400)
+        selected_toy = request.json['toy']
+
+        sounds = Sound.query.filter_by(toy_id=selected_toy).all()
+        response = []
+        
+        for sound in sounds:
+            response.append(sound.file_name)
+        
+        return jsonify(response)
+
+    elif request.method == 'GET':
+        response = []
+        toys = Toy.query.filter_by(user_id=current_user.id).all()
+        for toy in toys:
+            sounds = Sound.query.filter_by(toy_id=toy.id).all()
+            medias = []
+            for sound in sounds:
+                medias.append({
+                    "file_name": sound.file_name,
+                    "sound_url": url_for('static', filename='sounds/{}.wav'.format(sound.file_name)),
+                    "img_url": url_for('static', filename='img/{}.png'.format(sound.part))
+                })
+            response.append({
+                    "id": toy.id,
+                    "description": toy.description,
+                    "media": medias
+                })
+        return jsonify(response)
+
+
+@app.route('/text_to_speech/get', methods=['POST'])
+@login_required
+def text_to_speech_get():
+    sound = request.json['selected']
+    return send_file("static\sounds\{}.wav".format(sound[0]), mimetype='audio/wav', as_attachment=True, attachment_filename="{}.wav".format(sound[0]))
+
