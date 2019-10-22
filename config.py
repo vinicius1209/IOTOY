@@ -7,3 +7,4 @@ class Config(object):
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
 	OFENSIVE_FILE = os.path.join(basedir, 'ofensive.txt')
 	SOUNDS_URL = os.path.join(basedir, 'static/sounds')
+	SEND_FILE_MAX_AGE_DEFAULT = 0
