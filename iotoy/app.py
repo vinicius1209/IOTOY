@@ -1,9 +1,10 @@
 from flask import Flask, session
 from flask_cors import CORS
+from config import Config
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-import os
+
 
 # Custum Class 
 class FlaskVue(Flask):
@@ -13,34 +14,23 @@ class FlaskVue(Flask):
         variable_end_string='%%',
     ))
     
-# Sql Alchemy / Migrate / Login Manager
-db = SQLAlchemy()
-migrate = Migrate()
-login_manager = LoginManager()
-
 # Flask Definitions
 app = FlaskVue(__name__)
-app.config.from_mapping(
-    SECRET_KEY = 'iotoyComputacao',
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(app.instance_path, 'iotoy.db'),
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-)
+app.config.from_object(Config) 
 
 # Cors
 CORS(app)
 
-# Database
-db.init_app(app)
-migrate.init_app(app, db)
+# Sql Alchemy / Migrate
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # Login manager
-login_manager.init_app(app)
+login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-from . import models
-from . import routes
-app.register_blueprint(routes.bp)
+# Routes
+from . import routes 
 
 if __name__ == '__main__':
   app.run()

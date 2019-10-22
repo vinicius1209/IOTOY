@@ -1,4 +1,4 @@
-from iotoy import app, session, db
+from iotoy.app import app, session, db
 from iotoy.models import User, Toy, Sound
 from flask import render_template, flash, url_for, request, abort, redirect, jsonify, send_file, make_response
 from flask_login import current_user, login_user, logout_user, login_required
@@ -6,10 +6,8 @@ from iotoy.watson import WatsonTTS
 from iotoy.sounds import SoundTTS
 import os
 
-bp = Blueprint('iotoy', __name__)
-
-@bp.route('/', methods=['GET', 'POST'])
-@bp.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         data = request.get_json(silent=True)
@@ -39,7 +37,7 @@ def login():
         return render_template('login.html')
 
 
-@bp.route('/logout', methods=['GET'])
+@app.route('/logout', methods=['GET'])
 @login_required
 def logout():
 
@@ -48,7 +46,7 @@ def logout():
         return jsonify({"status": 200, "redirect": "/login"})
 
 
-@bp.route('/signup', methods=['POST'])
+@app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json(silent=True)
 
@@ -105,13 +103,13 @@ def signup():
         return abort(500)
 
 
-@bp.route('/current_user/info', methods=['GET'])
+@app.route('/current_user/info', methods=['GET'])
 @login_required
 def current_user_info():
     return str(current_user.username).upper()
 
 
-@bp.route('/current_user/config', methods=['GET', 'POST'])
+@app.route('/current_user/config', methods=['GET', 'POST'])
 @login_required
 def current_user_config():
     if request.method == 'GET':
@@ -133,7 +131,7 @@ def current_user_config():
         return "200"
 
 
-@bp.route('/current_user/toys/get', methods=['GET'])
+@app.route('/current_user/toys/get', methods=['GET'])
 @login_required
 def current_user_toys_get():
     if request.method == 'GET':
@@ -144,7 +142,7 @@ def current_user_toys_get():
         return jsonify(response)
 
 
-@bp.route('/current_user/toys/new', methods=['POST'])
+@app.route('/current_user/toys/new', methods=['POST'])
 @login_required
 def current_user_toys_new():
     if request.method == 'POST':
@@ -170,7 +168,7 @@ def current_user_toys_new():
         return jsonify({"status": 200})
 
 
-@bp.route('/current_user/toys/edit', methods=['POST'])
+@app.route('/current_user/toys/edit', methods=['POST'])
 @login_required
 def current_user_toys_edit():
     if request.method == 'POST':
@@ -199,7 +197,7 @@ def current_user_toys_edit():
         return jsonify({"status": 200})
 
 
-@bp.route('/current_user/toys/del', methods=['POST'])
+@app.route('/current_user/toys/del', methods=['POST'])
 @login_required
 def current_user_toys_del():
     if request.method == 'POST':
@@ -222,16 +220,16 @@ def current_user_toys_del():
 
 
 # Home route
-@bp.route('/transformar', methods=['GET'])
-@bp.route('/biblioteca', methods=['GET'])
-@bp.route('/brinquedos', methods=['GET'])
-@bp.route('/config', methods=['GET'])
+@app.route('/transformar', methods=['GET'])
+@app.route('/biblioteca', methods=['GET'])
+@app.route('/brinquedos', methods=['GET'])
+@app.route('/config', methods=['GET'])
 @login_required
 def home():
     return render_template('index.html') 
 
 
-@bp.route('/text_to_speech/post', methods=['POST'])
+@app.route('/text_to_speech/post', methods=['POST'])
 @login_required
 def text_to_speech_post(): 
     if request.method == 'POST':
@@ -293,7 +291,7 @@ def text_to_speech_post():
         return jsonify({"status": "200"})
 
     
-@bp.route('/text_to_speech/list', methods=['GET', 'POST'])
+@app.route('/text_to_speech/list', methods=['GET', 'POST'])
 @login_required
 def text_to_speech_list(): 
     if request.method == 'POST':
@@ -331,7 +329,7 @@ def text_to_speech_list():
         return jsonify(response)
 
 
-@bp.route('/text_to_speech/get', methods=['POST'])
+@app.route('/text_to_speech/get', methods=['POST'])
 @login_required
 def text_to_speech_get():
     sound = request.json['selected']
