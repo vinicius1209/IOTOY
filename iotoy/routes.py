@@ -319,7 +319,7 @@ def text_to_speech_list():
             for sound in sounds:
                 medias.append({
                     "file_name": sound.file_name,
-                    "sound_url": app.config['SOUNDS_URL'] + '/{}.wav'.format(sound.file_name),
+                    "sound_url": url_for('static', filename='sounds/{}.wav'.format(sound.file_name)),
                     "img_url": url_for('static', filename='img/{}.png'.format(sound.part))
                 })
             response.append({
