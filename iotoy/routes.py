@@ -246,7 +246,7 @@ def text_to_speech_post():
         text = request.json['input_tts']
         list_part = request.json['list_part']
         selected_toy = request.json['toy']
-        ofensive_file = open('ofensive.txt', "r")
+        ofensive_file = open(app.config['OFENSIVE_FILE'], "r")
         ofensive_list = ofensive_file.read().splitlines()
 
         # Verifica palavras ofensivas
