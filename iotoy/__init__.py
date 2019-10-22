@@ -33,5 +33,5 @@ login_manager.login_view = 'login'
 from . import routes 
 
 if __name__ == '__main__':
-  app.run()
+  app.run(threaded=True)
 
