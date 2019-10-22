@@ -101,7 +101,7 @@ const Biblioteca = {
             var vm = this
             home.$refs.loading.start()
             axios
-                .get("http://iotoy.herokuapp.com/text_to_speech/list")
+                .get("https://iotoy.herokuapp.com/text_to_speech/list")
                 .then(function (response) {
                     response.data.forEach(item => {
                         vm.list_toy.push(
@@ -126,7 +126,7 @@ const Biblioteca = {
             console.log(this.select_toy)
             axios
             .post(
-                "http://192.168.0.108:5000/iotoy/back",
+                "https://192.168.0.108:5000/iotoy/back",
                 {
                     url: origin + sound_obj.sound_url,
                     file_name: file_name
