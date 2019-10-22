@@ -5,6 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from iotoy.watson import WatsonTTS
 from iotoy.sounds import SoundTTS
 import os
+from datetime import datetime
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -273,15 +274,20 @@ def text_to_speech_post():
                 content = tts.create(text)
                 if content is None:
                     raise Exception('Erro ao gerar os sons pelo content ser None')
+                
                 # Criar o arquivo em disco
-                file_name = str(toy.id) + str(part)
+                file_name = str(toy.id) + str(part) + datetime.now().strftime("%d%m%Y%H%M%S")
                 file_sound = SoundTTS(file_name, content).create()
+                
                 if file_sound:
-                    sound = Sound.query.filter_by(file_name=file_name, toy_id=toy.id).first()
+                    sound = Sound.query.filter_by(part=part, toy_id=toy.id).first()
                     if not sound:
                         # Criar o som na base se ele nao existir ainda
                         sound = Sound(file_name=file_name, part=part, toy_id=selected_toy)
                         db.session.add(sound)
+                        db.session.commit()
+                    else:
+                        sound.file_name = file_name
                         db.session.commit()
                 else:
                     raise Exception('Erro ao gerar os sons')
@@ -328,10 +334,4 @@ def text_to_speech_list():
                     "media": medias
                 })
         return jsonify(response)
-
-
-@app.after_request
-def add_header(response):
-    response.cache_control.max_age = 0
-    response.cache_control.public = True
-    return response
+    
