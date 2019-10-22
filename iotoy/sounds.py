@@ -1,4 +1,5 @@
 from iotoy import app
+import os
 
 class SoundTTS():
 
@@ -8,7 +9,7 @@ class SoundTTS():
 
     def create(self):
         try:
-            with open(app.config['SOUNDS_URL'] + '/{}.wav'.format(self.name), 'w+') as audio_file:
+            with open(app.config['SOUNDS_URL'] + '/{}.wav'.format(self.name), os.O_RDWR|os.O_CREAT ) as audio_file:
                 audio_file.write(
                     self.content
                 )
