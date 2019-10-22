@@ -47,9 +47,6 @@ const Biblioteca = {
                                                         </audio>
                                                         </v-btn>
                                                     </v-card-text>
-                                                    <v-card-actions>
-                                                        <v-btn flat color="success" @click="send_sound_toy(sound)">Enviar</v-btn>
-                                                    </v-card-actions>
                                                 </v-card>
                                             </v-hover>
                                         </v-flex>                  
@@ -123,7 +120,6 @@ const Biblioteca = {
             home.$refs.loading.start()
             let origin = window.location.origin
             let file_name = sound_obj.file_name + '.wav'
-            console.log(this.select_toy)
             axios
             .post(
                 "https://192.168.0.108:5000/iotoy/back",
