@@ -8,8 +8,7 @@ class SoundTTS():
 
     def create(self):
         try:
-            print(app.config['SOUNDS_URL'] + '{}.wav'.format(self.name))
-            with open(app.config['SOUNDS_URL'] + '{}.wav'.format(self.name), 'wb') as audio_file:
+            with open(app.config['SOUNDS_URL'] + '/{}.wav'.format(self.name), 'wb') as audio_file:
                 audio_file.write(
                     self.content
                 )
