@@ -1,1 +1,1 @@
-web: flask db upgrade; gunicorn iotoy.app:app
+web: flask db upgrade; gunicorn iotoy.__init__:app
