@@ -22,7 +22,12 @@ login_manager = LoginManager()
 # Flask Definitions
 def create_app():
     app = FlaskVue(__name__)
-    app.config.from_object(Config) 
+    app.config.from_mapping(
+        SECRET_KEY = 'iotoyComputacao',
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+            'sqlite:///' + os.path.join(app.instance_path, 'iotoy.db'),
+        SQLALCHEMY_TRACK_MODIFICATIONS = False
+    )
 
     # Cors
     CORS(app)
