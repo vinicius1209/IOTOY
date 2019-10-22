@@ -80,7 +80,7 @@ Vue.component('tts-card', {
             home.$refs.loading.start()
             axios
                 .post(
-                    "http://127.0.0.1:5000/text_to_speech/post",
+                    "https://iotoy.herokuapp.com/text_to_speech/post",
                     {
                         input_tts: this.input_tts,
                         selection: this.selectedItems

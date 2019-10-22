@@ -54,7 +54,7 @@ Vue.component('sounds-card', {
     methods: {
         get_sound_list() {
             axios
-                .get("http://127.0.0.1:5000/text_to_speech/list")
+                .get("https://iotoy.herokuapp.com/text_to_speech/list")
                 .then(
                     response => (
                         ((this.responseData = response.data),
@@ -76,7 +76,7 @@ Vue.component('sounds-card', {
             home.$refs.loading.start()
 
             // Inicializa o XML HTTP Request
-            var url = "http://127.0.0.1:5000/text_to_speech/get"
+            var url = "https://iotoy.herokuapp.com/text_to_speech/get"
             var xhr = new XMLHttpRequest()
             xhr.open('POST', encodeURI(url), true)
             xhr.setRequestHeader('Content-Type', 'application/json')
