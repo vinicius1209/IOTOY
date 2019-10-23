@@ -13,7 +13,6 @@ const TTS = {
               label="Selecione o brinquedo"
               ref="toy_field"
             ></v-combobox>
-            <v-divider></v-divider>
             <v-select
               v-model="select_part"
               :items="list_part"
@@ -24,7 +23,6 @@ const TTS = {
               multiple
               ref="part_field"
             ></v-select>
-            <v-divider></v-divider>
             <v-textarea
               box
               label="Digite o texto para ser transformado em áudio"
@@ -105,7 +103,7 @@ const TTS = {
         home.$refs.loading.stop()
     },
     request_tts() {
-      
+
       if (this.select_toy == null) {
         home.$refs.notification.makeNotification('warning', 'É necessário selecionar algum brinquedo!')
         this.$refs.toy_field.focus()
