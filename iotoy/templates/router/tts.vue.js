@@ -1,8 +1,8 @@
 const TTS = {
   template: `
   <v-container fluid grid-list-md>
-    <v-layout>
-      <v-flex>
+    <v-layout row wrap>
+      <v-flex lg12 md12 xs12>
         <v-card flat>
           <v-card-text>
             <v-combobox
@@ -35,9 +35,27 @@ const TTS = {
           </v-card-text>
           <v-card-actions>
             <v-btn color="success" @click="request_tts()" style="margin: 0px 0px;">Transformar</v-btn>
-            <v-btn flat @click="view = 1">Voltar</v-btn>
           </v-card-actions>
         </v-card>
+      </v-flex>
+      <v-flex lg12 md12 xs12>
+      
+      <v-card flat>
+        <v-card-text>
+          <v-timeline dense>
+            <v-slide-x-reverse-transition group hide-on-leave>
+              <v-timeline-item v-for="item in items" :key="item.id" :color="item.color" small fill-dot>
+                <v-alert
+                  :value="true"
+                  :color="item.color"
+                  :icon="item.icon"
+                >Olá tudo bem?</v-alert>
+              </v-timeline-item>
+            </v-slide-x-reverse-transition>
+          </v-timeline>
+        </v-card-text>
+    </v-card>
+
       </v-flex>
     </v-layout>
   </v-container>
@@ -57,12 +75,24 @@ const TTS = {
       responseData: null,
       api_key: null,
       api_url: null,
-      current: 0
+      COLORS = [
+        'info',
+        'warning',
+        'error',
+        'success'
+      ],
+      ICONS = {
+        info: 'mdi-information',
+        warning: 'mdi-alert',
+        error: 'mdi-alert-circle',
+        success: 'mdi-check-circle'
+      }
     }
   },
   mounted() {
-    this.get_list_toy()
-    this.get_user_config()
+    this.get_list_toy(),
+    this.get_user_config(),
+    this.start()
   },
   methods: {
     get_list_toy() {
@@ -154,6 +184,48 @@ const TTS = {
           home.$refs.notification.makeNotification('error', 'Erro ao transformar o texto :(')
           console.log(error)
         });
+    },
+
+    addEvent(){
+      let { color, icon } = this.genAlert()
+
+      const previousColor = this.items[0].color
+
+      while (previousColor === color) {
+        color = this.genColor()
+      }
+
+      this.items.unshift({
+        id: this.nonce++,
+        color,
+        icon
+      })
+
+      if (this.nonce > 6) {
+        this.items.pop()
+      }
+    },
+    genAlert(){
+      const color = this.genColor()
+      return {
+        color,
+        icon: this.genIcon(color)
+      }
+    },
+    genColor() {
+      return this.COLORS[Math.floor(Math.random() * 3)]
+    },
+    genIcon(color) {
+      return this.ICONS[color]
+    },
+    start() {
+      this.interval = setInterval(this.addEvent, 3000)
+    },
+    stop() {
+      clearInterval(this.interval)
+      this.interval = null
     }
+
+
   }
 } 
