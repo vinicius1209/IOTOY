@@ -13,10 +13,7 @@ const TTS = {
               label="Selecione o brinquedo"
               ref="toy_field"
             ></v-combobox>
-          </v-card-text>
-        </v-card>
-        <v-card flat>
-          <v-card-text>
+            <v-divider></v-divider>
             <v-select
               v-model="select_part"
               :items="list_part"
@@ -80,7 +77,8 @@ const TTS = {
                 this.list_toy.push(
                   { text: item.description, value: item.id }
                 );
-              }))
+              })),
+              this.select_toy = this.list_toy[0]
           ),
         )
         .catch(error => {
