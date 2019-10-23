@@ -306,6 +306,7 @@ def current_user_dicas_del():
 @app.route('/transformar', methods=['GET'])
 @app.route('/biblioteca', methods=['GET'])
 @app.route('/brinquedos', methods=['GET'])
+@app.route('/dicas', methods=['GET'])
 @app.route('/config', methods=['GET'])
 @login_required
 def home():
