@@ -47,7 +47,7 @@ const TTS = {
                     <v-layout justify-space-between>
                       <v-flex>
                         {{item.text}}
-                        <v-btn flat small color="primary">Selecionar</v-btn>
+                        <v-btn flat small color="primary" @click="selecionarDica({{item.text}})">Selecionar</v-btn>
                       </v-flex>
                     </v-layout>
                   </v-timeline-item>
@@ -126,6 +126,9 @@ const TTS = {
     stop_dicas() {
       clearInterval(this.interval)
       this.interval = null
+    },
+    selecionarDica(texto){
+      this.input_tts = texto
     },
     get_list_toy() {
       home.$refs.loading.start()
