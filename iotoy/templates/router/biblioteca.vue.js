@@ -6,14 +6,16 @@ const Biblioteca = {
             <v-card>
             <v-card-text>
                 <v-layout row wrap>
-                <v-combobox
-                    v-model="select_toy"
-                    :items="list_toy"
-                    item-value="id"
-                    item-text="description"
-                    label="Selecione o brinquedo"
-                    ref="toy_field"
-                ></v-combobox>
+                <v-flex lg12 md12 xs12>
+                    <v-combobox
+                        v-model="select_toy"
+                        :items="list_toy"
+                        item-value="id"
+                        item-text="description"
+                        label="Selecione o brinquedo"
+                        ref="toy_field"
+                    ></v-combobox>
+                </v-flex>
                 <v-flex lg3 md4 xs6 v-for="sound in select_toy.media" :key="sound.file_name">
                     <v-hover>
                     <v-card slot-scope="{ hover }" :class="card_elevation(hover)" class="mx-auto">
