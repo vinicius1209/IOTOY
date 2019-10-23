@@ -221,6 +221,87 @@ def current_user_toys_del():
         return jsonify({"status": 200})
 
 
+@app.route('/current_user/dicas/get', methods=['GET'])
+@login_required
+def current_user_dicas_get():
+    if request.method == 'GET':
+        user_dicas = Dica.query.filter_by(user_id=current_user.id).all()
+        response = []
+        for dica in user_dicas:
+            response.append({"description" : dica.description, "id": dica.id})
+        return jsonify(response)
+
+
+@app.route('/current_user/dicas/new', methods=['POST'])
+@login_required
+def current_user_dicas_new():
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "description" not in data:
+            return abort(400)
+        
+        description = data["description"]
+
+        # Verifica brinquedo
+        dica = Dica.query.filter_by(description=description).first()
+        if dica is not None:
+            return jsonify({"status": 404, "msg": "Descrição já cadastrado"})
+
+        dica = Dica(description=description, user_id=current_user.id)
+        db.session.add(dica)
+        db.session.commit()
+
+        return jsonify({"status": 200})
+
+
+@app.route('/current_user/dicas/edit', methods=['POST'])
+@login_required
+def current_user_dicas_edit():
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "id" not in data:
+            return abort(400)
+        if "description" not in data:
+            return abort(400)
+        
+        dica_id = data["id"]
+        description = data["description"]
+
+        # Verifica brinquedo para editar as informações
+        dica = Dica.query.get(dica_id)
+        if dica is None:
+            return jsonify({"status": 404, "msg": "Dica não encontrada"})
+
+        dica.description = description
+        db.session.commit()
+
+        return jsonify({"status": 200})
+
+
+@app.route('/current_user/dicas/del', methods=['POST'])
+@login_required
+def current_user_dicas_del():
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+
+        if "id" not in data:
+            return abort(400)
+        
+        dica_id = data["id"]
+
+        # Verifica brinquedo para editar as informações
+        dica = Dica.query.get(dica_id)
+        if dica is None:
+            return jsonify({"status": 404, "msg": "Dica não encontrada"})
+
+        db.session.delete(dica)
+        db.session.commit()
+
+        return jsonify({"status": 200})
+
+
 # Home route
 @app.route('/transformar', methods=['GET'])
 @app.route('/biblioteca', methods=['GET'])

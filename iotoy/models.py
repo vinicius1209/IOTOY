@@ -50,6 +50,13 @@ class Toy(db.Model):
     user = db.relationship('User')
 
 
+class Dica(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(280), nullable=True, index=True, unique=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User')
+
+
 class Sound(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     file_name = db.Column(db.String(120), nullable=False, index=True, unique=False)

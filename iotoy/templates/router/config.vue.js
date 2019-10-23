@@ -2,8 +2,14 @@ const Config = {
     template: `
     <v-container fluid grid-list-md>
         <v-layout row wrap>
-            <v-flex lg8 md8 xs12>
+            <v-flex lg12 md12 xs12>
                 <v-card class="elevation-3">
+                    <v-card-title primary-title>
+                    <div>
+                        <h3 class="headline mb-0">Plano Lite</h3>
+                        <div>10.000 caracteres por mês</div>
+                    </div>
+                    </v-card-title>
                     <v-card-text>
                         <v-form ref="form" v-model="valid" lazy-validation>
                             <v-text-field v-model="api_key" :rules="api_keyRules" label="Api Key"></v-text-field>
@@ -12,21 +18,9 @@ const Config = {
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="success" @click="set_user_config">Salvar</v-btn>
+                        <v-btn color="info" href="https://cloud.ibm.com" target="_blank"> IBM Cloud </v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-flex>
-            <v-flex lg4 md4 xs12>
-                <v-card class="elevation-3">
-                    <v-card-title primary-title>
-                        <div>
-                            <h3 class="headline mb-0">Plano Lite</h3>
-                            <div>10.000 caracteres por mês</div>
-                        </div>
-                    </v-card-title>
-                    <v-card-actions>
-                        <v-btn color="info" href="https://cloud.ibm.com/services/text-to-speech" target="_blank"> Gerenciar </v-btn>
-                    </v-card-actions>
-                </v-card>     
             </v-flex>
         </v-layout>
     </v-container>
