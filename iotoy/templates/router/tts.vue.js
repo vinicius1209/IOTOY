@@ -44,7 +44,7 @@ const TTS = {
         <v-card-text>
           <v-timeline dense>
             <v-slide-x-reverse-transition group hide-on-leave>
-              <v-timeline-item v-for="item in items" :key="item.id" :color="item.color" small fill-dot>
+              <v-timeline-item v-for="item in items_ajuda" :key="item.id" :color="item.color" small fill-dot>
                 <v-alert
                   :value="true"
                   :color="item.color"
