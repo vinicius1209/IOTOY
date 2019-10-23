@@ -1,73 +1,54 @@
 const TTS = {
   template: `
   <v-container fluid grid-list-md>
-  <v-layout>
-    <v-flex>
-      <v-stepper v-model="view">
-        <v-stepper-header>
-          <v-stepper-step :complete="view > 1" step="1">Brinquedo</v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step step="2">Transformação</v-stepper-step>
-        </v-stepper-header>
-        <v-stepper-items>
-          <!-- BRINQUEDO -->
-          <v-stepper-content step="1">
-            <v-card flat>
-              <v-card-text>
-                <v-combobox
-                  v-model="select_toy"
-                  :items="list_toy"
-                  item-value="id"
-                  item-text="text"
-                  label="Selecione o brinquedo"
-                  ref="toy_field"
-                ></v-combobox>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn color="primary" @click="to_view_transform()" style="margin: 0px 0px;">Próximo</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-stepper-content>
-          <!--TRANSFORMAÇÃO -->
-          <v-stepper-content step="2">
-            <v-card flat>
-              <v-card-text>
-              <v-select
-                  v-model="select_part"
-                  :items="list_part"
-                  item-value="value"
-                  item-text="text"
-                  chips
-                  label="Selecione quais partes do brinquedo você deseja"
-                  multiple
-                  ref="part_field"
-                ></v-select>
-                <v-divider></v-divider>
-                <v-textarea
-                  box
-                  label="Digite o texto para ser transformado em áudio"
-                  rows="2"
-                  auto-grow
-                  v-model="input_tts"
-                  counter="280"
-                  id="testando"
-                ></v-textarea>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn color="success" @click="request_tts()" style="margin: 0px 0px;">Transformar</v-btn>
-                <v-btn flat @click="view = 1">Voltar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-stepper-content>
-        </v-stepper-items>
-      </v-stepper>
-    </v-flex>
-  </v-layout>
-</v-container>
+    <v-layout>
+      <v-flex>
+        <v-card flat>
+          <v-card-text>
+            <v-combobox
+              v-model="select_toy"
+              :items="list_toy"
+              item-value="id"
+              item-text="text"
+              label="Selecione o brinquedo"
+              ref="toy_field"
+            ></v-combobox>
+          </v-card-text>
+        </v-card>
+        <v-card flat>
+          <v-card-text>
+            <v-select
+              v-model="select_part"
+              :items="list_part"
+              item-value="value"
+              item-text="text"
+              chips
+              label="Selecione quais partes do brinquedo você deseja"
+              multiple
+              ref="part_field"
+            ></v-select>
+            <v-divider></v-divider>
+            <v-textarea
+              box
+              label="Digite o texto para ser transformado em áudio"
+              rows="2"
+              auto-grow
+              v-model="input_tts"
+              counter="280"
+              id="testando"
+            ></v-textarea>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="success" @click="request_tts()" style="margin: 0px 0px;">Transformar</v-btn>
+            <v-btn flat @click="view = 1">Voltar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
    `,
   data() {
     return {
-      view: 0,
       list_toy: [],
       list_part: [
         { text: 'Braço direito', value: 'braco_direito' },
@@ -107,14 +88,6 @@ const TTS = {
           home.$refs.notification.makeNotification('error', 'Houve um erro ao buscar a lista de brinquedos')
         });
     },
-    to_view_transform() {
-      if (this.select_toy == null) {
-        home.$refs.notification.makeNotification('warning', 'É necessário selecionar algum brinquedo!')
-        this.$refs.toy_field.focus()
-      } else {
-        this.view = 2
-      }
-    },
     get_user_config() {
       axios
         .get("https://iotoy.herokuapp.com/current_user/config")
@@ -130,6 +103,12 @@ const TTS = {
         });
     },
     request_tts() {
+      if (this.select_toy == null) {
+        home.$refs.notification.makeNotification('warning', 'É necessário selecionar algum brinquedo!')
+        this.$refs.toy_field.focus()
+        return
+      }
+
       if (this.api_key == null || this.api_url == null) {
         home.$refs.notification.makeNotification('warning', 'É necessário configurar o Token e Url nas configurações para prosseguir!')
         return

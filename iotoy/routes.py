@@ -287,6 +287,9 @@ def text_to_speech_post():
                         db.session.add(sound)
                         db.session.commit()
                     else:
+                        # Delete nos arquivos antigos
+                        if os.path.exists(app.config['SOUNDS_URL'] + '/{}.wav'.format(sound.file_name)):
+                            os.remove(app.config['SOUNDS_URL'] + '/{}.wav'.format(sound.file_name))
                         sound.file_name = file_name
                         db.session.commit()
                 else:
