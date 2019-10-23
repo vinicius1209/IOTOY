@@ -1,4 +1,66 @@
-const TTS = {
+<v-container fluid grid-list-md>
+  <v-card flat>
+    <v-card-text>
+      <v-layout row wrap>
+        <v-flex lg6 md6 xs12>
+          <v-combobox
+            v-model="select_toy"
+            :items="list_toy"
+            item-value="id"
+            item-text="text"
+            label="Selecione o brinquedo"
+            ref="toy_field"
+          ></v-combobox>
+          <v-select
+            v-model="select_part"
+            :items="list_part"
+            item-value="value"
+            item-text="text"
+            chips
+            multiple
+            ref="part_field"
+          ></v-select>
+          <v-textarea
+            box
+            label="Digite ou selecione uma fala para ser transformada em áudio"
+            rows="2"
+            auto-grow
+            v-model="input_tts"
+            counter="280"
+            id="testando"
+          ></v-textarea>
+        </v-flex>
+        <v-flex lg6 md6 xs12>
+          <v-card flat>
+            <v-card-text>
+              <v-timeline dense>
+                <v-slide-x-reverse-transition group hide-on-leave>
+                  <v-timeline-item
+                    v-for="item in dicas"
+                    :key="item.id"
+                    :color="item.color"
+                    small
+                    fill-dot
+                  >
+                    <v-layout justify-space-between>
+                      <v-flex>
+                        {{item.text}}
+                        <v-btn flat small color="primary">Selecionar</v-btn>
+                      </v-flex>
+                    </v-layout>
+                  </v-timeline-item>
+                </v-slide-x-reverse-transition>
+              </v-timeline>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn color="success" @click="request_tts()">Transformar</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-container>const TTS = {
   template: `
   <v-container fluid grid-list-md>
     <v-layout row wrap>
@@ -75,23 +137,24 @@ const TTS = {
       responseData: null,
       api_key: null,
       api_url: null,
-      COLORS: [
-        'info',
-        'warning',
-        'error',
-        'success'
+      interval: null,
+      dicas_colors:['pink', 'teal lighten-3', 'cyan', 'amber', 'orange', 'purple lighten-1', 'brown lighten-2'],
+      dicas_textos: [
+        'Como vai?', 
+        'Fui criado para ajuda-lo a se expressar melhor', 
+        'Estou muito feliz em ver você aqui comigo',
+        'Minha comida favorita é laranja!',
+        'Gosto muito de beber água',
+        'Os peixinhos nadam muito rápido',
+        'A de amor, B de baichinho, C de coração',
+        'Temos sempre que agradecer a Deus pela nossa vida',
+        'Papai do céu, obrigado pela minha família'
       ],
-      ICONS: {
-        info: 'mdi-information',
-        warning: 'mdi-alert',
-        error: 'mdi-alert-circle',
-        success: 'mdi-check-circle'
-      },
-      items_ajuda: [
+      dicas: [
         {
           id: 1,
           color: 'info',
-          icon: ICONS['info']
+          text: 'Olá tudo bem?'
         }
       ],
       nonce: 2
@@ -100,9 +163,31 @@ const TTS = {
   mounted() {
     this.get_list_toy(),
     this.get_user_config(),
-    this.start()
+    this.start_dicas()
   },
   methods: {
+	addEvent() {
+      
+      this.dicas.unshift({
+        id: this.nonce++,
+        color: this.dicas_colors[Math.floor(Math.random() * this.dicas_colors.length)],
+        text: this.dicas_textos[Math.floor(Math.random() * this.dicas_textos.length)]
+	   })
+
+      if (this.nonce > 5) {
+        this.dicas.pop()
+      }
+
+      console.log(this.dicas)
+
+    },
+    start_dicas() {
+      this.interval = setInterval(this.addEvent, 5000)
+    },
+    stop_dicas() {
+      clearInterval(this.interval)
+      this.interval = null
+    },
     get_list_toy() {
       home.$refs.loading.start()
       axios
