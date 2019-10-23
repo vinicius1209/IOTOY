@@ -81,10 +81,7 @@ const TTS = {
       api_url: null,
       interval: null,
       dicas_colors:['pink', 'teal lighten-3', 'cyan', 'amber', 'orange', 'purple lighten-1', 'brown lighten-2'],
-      dicas_textos: [
-        'Como vai?', 
-        'Estou muito feliz em ver você aqui comigo'
-      ],
+      dicas_textos: [],
       dicas: [
         {
           id: 1,
