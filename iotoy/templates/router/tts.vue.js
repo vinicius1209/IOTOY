@@ -68,6 +68,7 @@ const TTS = {
   },
   methods: {
     get_list_toy() {
+      home.$refs.loading.start()
       axios
         .get("https://iotoy.herokuapp.com/current_user/toys/get")
         .then(
@@ -85,8 +86,10 @@ const TTS = {
           console.log(error)
           home.$refs.notification.makeNotification('error', 'Houve um erro ao buscar a lista de brinquedos')
         });
+        home.$refs.loading.stop()
     },
     get_user_config() {
+      home.$refs.loading.start()
       axios
         .get("https://iotoy.herokuapp.com/current_user/config")
         .then(
@@ -99,8 +102,10 @@ const TTS = {
           console.log(error)
           home.$refs.notification.makeNotification('error', 'Houve um erro ao buscar as configurações do usuário')
         });
+        home.$refs.loading.stop()
     },
     request_tts() {
+      
       if (this.select_toy == null) {
         home.$refs.notification.makeNotification('warning', 'É necessário selecionar algum brinquedo!')
         this.$refs.toy_field.focus()
