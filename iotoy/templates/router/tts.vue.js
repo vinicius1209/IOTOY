@@ -108,7 +108,7 @@ const TTS = {
     this.start_dicas()
   },
   methods: {
-	addEvent() {
+	  addEvent () {
       
       this.dicas.unshift({
         id: this.nonce++,
@@ -119,9 +119,6 @@ const TTS = {
       if (this.nonce > 5) {
         this.dicas.pop()
       }
-
-      console.log(this.dicas)
-
     },
     start_dicas() {
       this.interval = setInterval(this.addEvent, 5000)
