@@ -216,48 +216,6 @@ const TTS = {
           home.$refs.notification.makeNotification('error', 'Erro ao transformar o texto :(')
           console.log(error)
         });
-    },
-
-    addEvent(){
-      let { color, icon } = this.genAlert()
-
-      const previousColor = this.items_ajuda[0].color
-
-      while (previousColor === color) {
-        color = this.genColor()
-      }
-
-      this.items_ajuda.unshift({
-        id: this.nonce++,
-        color,
-        icon
-      })
-
-      if (this.nonce > 6) {
-        this.items_ajuda.pop()
-      }
-    },
-    genAlert(){
-      const color = this.genColor()
-      return {
-        color,
-        icon: this.genIcon(color)
-      }
-    },
-    genColor() {
-      return this.COLORS[Math.floor(Math.random() * 3)]
-    },
-    genIcon(color) {
-      return this.ICONS[color]
-    },
-    start() {
-      this.interval = setInterval(this.addEvent, 3000)
-    },
-    stop() {
-      clearInterval(this.interval)
-      this.interval = null
     }
-
-
   }
 } 
