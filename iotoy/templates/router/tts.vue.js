@@ -83,14 +83,7 @@ const TTS = {
       dicas_colors:['pink', 'teal lighten-3', 'cyan', 'amber', 'orange', 'purple lighten-1', 'brown lighten-2'],
       dicas_textos: [
         'Como vai?', 
-        'Fui criado para ajuda-lo a se expressar melhor', 
-        'Estou muito feliz em ver você aqui comigo',
-        'Minha comida favorita é laranja!',
-        'Gosto muito de beber água',
-        'Os peixinhos nadam muito rápido',
-        'A de amor, B de baichinho, C de coração',
-        'Temos sempre que agradecer a Deus pela nossa vida',
-        'Papai do céu, obrigado pela minha família'
+        'Estou muito feliz em ver você aqui comigo'
       ],
       dicas: [
         {
@@ -104,12 +97,10 @@ const TTS = {
   },
   mounted() {
     this.get_list_toy(),
-    this.get_user_config(),
-    this.start_dicas()
+    this.get_user_config()
   },
   methods: {
 	  addEvent () {
-      
       this.dicas.unshift({
         id: this.nonce++,
         color: this.dicas_colors[Math.floor(Math.random() * this.dicas_colors.length)],
@@ -119,6 +110,24 @@ const TTS = {
       if (this.nonce > 5) {
         this.dicas.pop()
       }
+    },
+    get_list_dicas(){
+      axios
+      .get("https://iotoy.herokuapp.com/current_user/dicas/get")
+      .then(
+        response => (
+          ((this.responseData = response.data),
+            this.responseData.forEach(item => {
+              this.dicas_textos.push(item.description);
+            }
+          ))
+        ),
+      )
+      .catch(error => {
+        console.log(error)
+        home.$refs.notification.makeNotification('error', 'Houve um erro ao buscar a listagem de dicas')
+      });
+      this.start_dicas()
     },
     start_dicas() {
       this.interval = setInterval(this.addEvent, 5000)

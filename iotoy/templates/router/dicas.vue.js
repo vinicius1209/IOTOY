@@ -76,7 +76,8 @@ const Dicas = {
                 v => v.length <= 30 || 'Dica deve possuir até 280 characters'
             ],
             headers: [
-                { text: 'Descrição', value: 'description' }
+                { text: 'Descrição', value: 'description' },
+                { text: 'Ações', value: 'name', sortable: false }
             ],
             list_dicas: [],
             deletedIndex: -1,
