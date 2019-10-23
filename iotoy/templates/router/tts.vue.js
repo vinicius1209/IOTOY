@@ -47,7 +47,7 @@ const TTS = {
                     <v-layout justify-space-between>
                       <v-flex>
                         {{item.text}}
-                        <v-btn flat small color="primary" @click="selecionarDica({{item.text}})">Selecionar</v-btn>
+                        <v-btn flat small color="primary" @click="selecionarDica(item.text)">Selecionar</v-btn>
                       </v-flex>
                     </v-layout>
                   </v-timeline-item>
