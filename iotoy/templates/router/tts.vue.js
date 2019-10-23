@@ -97,7 +97,8 @@ const TTS = {
   },
   mounted() {
     this.get_list_toy(),
-    this.get_user_config()
+    this.get_user_config(),
+    this.get_list_dicas()
   },
   methods: {
 	  addEvent () {
@@ -121,7 +122,7 @@ const TTS = {
               this.dicas_textos.push(item.description);
             }
           ))
-        ),
+        )
       )
       .catch(error => {
         console.log(error)
