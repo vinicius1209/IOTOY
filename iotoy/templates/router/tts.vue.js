@@ -75,13 +75,13 @@ const TTS = {
       responseData: null,
       api_key: null,
       api_url: null,
-      COLORS = [
+      COLORS: [
         'info',
         'warning',
         'error',
         'success'
       ],
-      ICONS = {
+      ICONS: {
         info: 'mdi-information',
         warning: 'mdi-alert',
         error: 'mdi-alert-circle',
