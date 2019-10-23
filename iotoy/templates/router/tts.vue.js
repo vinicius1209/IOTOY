@@ -86,7 +86,15 @@ const TTS = {
         warning: 'mdi-alert',
         error: 'mdi-alert-circle',
         success: 'mdi-check-circle'
-      }
+      },
+      items_ajuda: [
+        {
+          id: 1,
+          color: 'info',
+          icon: ICONS['info']
+        }
+      ],
+      nonce: 2
     }
   },
   mounted() {
@@ -189,20 +197,20 @@ const TTS = {
     addEvent(){
       let { color, icon } = this.genAlert()
 
-      const previousColor = this.items[0].color
+      const previousColor = this.items_ajuda[0].color
 
       while (previousColor === color) {
         color = this.genColor()
       }
 
-      this.items.unshift({
+      this.items_ajuda.unshift({
         id: this.nonce++,
         color,
         icon
       })
 
       if (this.nonce > 6) {
-        this.items.pop()
+        this.items_ajuda.pop()
       }
     },
     genAlert(){
