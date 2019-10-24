@@ -115,7 +115,7 @@ const Dicas = {
     methods: {
         get_list_dicas() {
             axios
-                .get("https://iotoy.herokuapp.com/current_user/dicas/get")
+                .get("/current_user/dicas/get")
                 .then(
                     response => (
                         this.list_dicas = [],
@@ -151,7 +151,7 @@ const Dicas = {
                 home.$refs.loading.start()
                 axios
                     .post(
-                        "https://iotoy.herokuapp.com/current_user/dicas/del",
+                        "/current_user/dicas/del",
                         {
                             id: this.deletedItem.id
                         },
@@ -184,7 +184,7 @@ const Dicas = {
                         home.$refs.loading.start()
                         axios
                             .post(
-                                "https://iotoy.herokuapp.com/current_user/dicas/edit",
+                                "/current_user/dicas/edit",
                                 {
                                     id: this.editedItem.id,
                                     description: this.editedItem.description
@@ -215,7 +215,7 @@ const Dicas = {
                         home.$refs.loading.start()
                         axios
                             .post(
-                                "https://iotoy.herokuapp.com/current_user/dicas/new",
+                                "/current_user/dicas/new",
                                 {
                                     description: this.editedItem.description
                                 },

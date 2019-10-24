@@ -61,7 +61,7 @@ var login = new Vue({
             if (this.$refs.login_form.validate()) {
                 axios
                     .post(
-                        "https://iotoy.herokuapp.com/login",
+                        "/login",
                         {
                             username: this.login_form.username,
                             password: this.login_form.password
@@ -89,7 +89,7 @@ var login = new Vue({
                 var vm = this
                 axios
                     .post(
-                        "https://iotoy.herokuapp.com/signup",
+                        "/signup",
                         {
                             username: this.signup_form.username,
                             password: this.signup_form.password,

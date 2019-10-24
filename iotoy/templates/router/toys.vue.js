@@ -127,7 +127,7 @@ const Toys = {
     methods: {
         get_list_toys() {
             axios
-                .get("https://iotoy.herokuapp.com/current_user/toys/get")
+                .get("/current_user/toys/get")
                 .then(
                     response => (
                         this.list_toy = [],
@@ -164,7 +164,7 @@ const Toys = {
                 home.$refs.loading.start()
                 axios
                     .post(
-                        "https://iotoy.herokuapp.com/current_user/toys/del",
+                        "/current_user/toys/del",
                         {
                             id: this.deletedItem.id
                         },
@@ -197,7 +197,7 @@ const Toys = {
                         home.$refs.loading.start()
                         axios
                             .post(
-                                "https://iotoy.herokuapp.com/current_user/toys/edit",
+                                "/current_user/toys/edit",
                                 {
                                     id: this.editedItem.id,
                                     mac_address: this.editedItem.mac_address,
@@ -229,7 +229,7 @@ const Toys = {
                         home.$refs.loading.start()
                         axios
                             .post(
-                                "https://iotoy.herokuapp.com/current_user/toys/new",
+                                "/current_user/toys/new",
                                 {
                                     mac_address: this.editedItem.mac_address,
                                     description: this.editedItem.description

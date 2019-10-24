@@ -119,7 +119,7 @@ Vue.component('side-menu', {
         doLogout() {
             axios
                 .get(
-                    "https://iotoy.herokuapp.com/logout",
+                    "/logout",
                     {
                         headers: {
                             "Content-Type": "application/json"
@@ -137,7 +137,7 @@ Vue.component('side-menu', {
             var vm = this
             axios
                 .get(
-                    "https://iotoy.herokuapp.com/current_user/info",
+                    "/current_user/info",
                     {
                         headers: {
                             "Content-Type": "application/json"

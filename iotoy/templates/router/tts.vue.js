@@ -111,7 +111,7 @@ const TTS = {
     },
     get_list_dicas(){
       axios
-      .get("https://iotoy.herokuapp.com/current_user/dicas/get")
+      .get("/current_user/dicas/get")
       .then(
         response => (
           ((this.responseData = response.data),
@@ -140,7 +140,7 @@ const TTS = {
     get_list_toy() {
       home.$refs.loading.start()
       axios
-        .get("https://iotoy.herokuapp.com/current_user/toys/get")
+        .get("/current_user/toys/get")
         .then(
           response => (
             ((this.responseData = response.data),
@@ -161,7 +161,7 @@ const TTS = {
     get_user_config() {
       home.$refs.loading.start()
       axios
-        .get("https://iotoy.herokuapp.com/current_user/config")
+        .get("/current_user/config")
         .then(
           response => (
             this.api_key = response.data.api_key,
@@ -199,7 +199,7 @@ const TTS = {
       home.$refs.loading.start()
       axios
         .post(
-          "https://iotoy.herokuapp.com/text_to_speech/post",
+          "/text_to_speech/post",
           {
             input_tts: this.input_tts,
             list_part: this.select_part,
