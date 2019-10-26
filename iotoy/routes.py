@@ -420,3 +420,30 @@ def text_to_speech_list():
                 })
         return jsonify(response)
     
+
+@app.route('/text_to_speech/api/list', methods=['POST'])
+def text_to_speech_api_list():
+    
+    data = request.get_json(silent=True)
+
+    if "mac_address" not in data:
+        return abort(400)
+    
+    mac_address = request.json['mac_address']
+    
+    response = []
+    toys = Toy.query.filter_by(mac_address=mac_address).all()
+    for toy in toys:
+        sounds = Sound.query.filter_by(toy_id=toy.id).all()
+        medias = []
+        for sound in sounds:
+            medias.append({
+                "file_name": sound.file_name,
+                "sound_url": url_for('static', filename='sounds/{}.wav'.format(sound.file_name))
+            })
+        response.append({
+            "id": toy.id,
+            "description": toy.description,
+            "media": medias
+        })
+    return jsonify(response)
