@@ -68,13 +68,13 @@ const TTS = {
     return {
       list_toy: [],
       list_part: [
-        { text: 'Braço direito', value: 'braco_direito' },
-        { text: 'Braço esquerdo', value: 'braco_esquerdo' },
-        { text: 'Perna direita', value: 'perna_direita' },
-        { text: 'Perna esquerda', value: 'perna_esquerda' }
+        { text: 'Botão A', value: 'botao_a' },
+        { text: 'Botão B', value: 'botao_b' },
+        { text: 'Botão C', value: 'botao_c' },
+        { text: 'Botão D', value: 'botao_d' }
       ],
       select_toy: null,
-      select_part: ['braco_direito', 'braco_esquerdo', 'perna_direita', 'perna_esquerda'],
+      select_part: ['botao_a', 'botao_b', 'botao_c', 'botao_d'],
       input_tts: null,
       responseData: null,
       api_key: null,

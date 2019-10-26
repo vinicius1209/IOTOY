@@ -428,22 +428,19 @@ def text_to_speech_api_list():
 
     if "mac_address" not in data:
         return abort(400)
+
+    if "part" not in data:
+        return abort(400)
     
     mac_address = request.json['mac_address']
+    part = request.json['part']
     
     response = []
-    toys = Toy.query.filter_by(mac_address=mac_address).all()
-    for toy in toys:
-        sounds = Sound.query.filter_by(toy_id=toy.id).all()
-        medias = []
-        for sound in sounds:
-            medias.append({
-                "file_name": sound.file_name,
-                "sound_url": url_for('static', filename='sounds/{}.wav'.format(sound.file_name))
-            })
+    toy = Toy.query.filter_by(mac_address=mac_address).first()
+    if toy:
+        sound = Sound.query.filter_by(toy_id=toy.id, part=part).first()
         response.append({
-            "id": toy.id,
-            "description": toy.description,
-            "media": medias
+            "file_name": sound.file_name,
+            "sound_url": url_for('static', filename='sounds/{}.wav'.format(sound.file_name))
         })
     return jsonify(response)

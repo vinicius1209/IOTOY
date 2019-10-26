@@ -73,7 +73,7 @@ const Dicas = {
             description: '',
             descriptionRules: [
                 v => !!v || 'É necessário preencher a Descrição',
-                v => v.length <= 30 || 'Dica deve possuir até 280 characters'
+                v => v.length <= 280 || 'Dica deve possuir até 280 characters'
             ],
             headers: [
                 { text: 'Descrição', value: 'description' },
