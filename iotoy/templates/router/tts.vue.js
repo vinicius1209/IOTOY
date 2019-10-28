@@ -1,68 +1,77 @@
 const TTS = {
   template: `
   <v-container fluid grid-list-md>
-  <v-card flat>
-    <v-card-text>
-      <v-layout row wrap>
-        <v-flex lg6 md6 xs12>
-          <v-combobox
-            v-model="select_toy"
-            :items="list_toy"
-            item-value="id"
-            item-text="text"
-            label="Selecione o brinquedo"
-            ref="toy_field"
-          ></v-combobox>
-          <v-select
-            v-model="select_part"
-            :items="list_part"
-            item-value="value"
-            item-text="text"
-            chips
-            multiple
-            ref="part_field"
-          ></v-select>
-          <v-textarea
-            box
-            label="Digite ou selecione uma fala para ser transformada em áudio"
-            rows="2"
-            auto-grow
-            v-model="input_tts"
-            counter="280"
-            id="testando"
-          ></v-textarea>
-        </v-flex>
-        <v-flex lg6 md6 xs12>
-          <v-card flat>
-            <v-card-text>
-              <v-timeline dense>
-                <v-slide-x-reverse-transition group hide-on-leave>
-                  <v-timeline-item
-                    v-for="item in dicas"
-                    :key="item.id"
-                    :color="item.color"
-                    small
-                    fill-dot
-                  >
-                    <v-layout justify-space-between>
-                      <v-flex>
-                        {{item.text}}
-                        <v-btn flat small color="primary" @click="selecionarDica(item.text)">Selecionar</v-btn>
-                      </v-flex>
-                    </v-layout>
-                  </v-timeline-item>
-                </v-slide-x-reverse-transition>
-              </v-timeline>
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn color="success" @click="request_tts()">Transformar</v-btn>
-    </v-card-actions>
-  </v-card>
-</v-container>
+    <v-layout row wrap>
+      <v-flex lg12 md12 xs12>
+        <v-card flat>
+          <v-card-text>
+            <v-layout row wrap>
+              <v-flex lg6 md6 xs12>
+                <v-combobox
+                  v-model="select_toy"
+                  :items="list_toy"
+                  item-value="id"
+                  item-text="text"
+                  label="Selecione o brinquedo"
+                  ref="toy_field"
+                ></v-combobox>
+                <v-select
+                  v-model="select_part"
+                  :items="list_part"
+                  item-value="value"
+                  item-text="text"
+                  chips
+                  multiple
+                  ref="part_field"
+                ></v-select>
+                <v-textarea
+                  box
+                  label="Digite ou selecione uma fala para ser transformada em áudio"
+                  rows="2"
+                  auto-grow
+                  v-model="input_tts"
+                  counter="280"
+                  id="testando"
+                ></v-textarea>
+              </v-flex>
+              <v-flex lg6 md6 xs12>
+                <v-card flat>
+                  <v-card-text>
+                    <v-timeline dense>
+                      <v-slide-x-reverse-transition group hide-on-leave>
+                        <v-timeline-item
+                          v-for="item in dicas"
+                          :key="item.id"
+                          :color="item.color"
+                          small
+                          fill-dot
+                        >
+                          <v-layout justify-space-between>
+                            <v-flex>
+                              {{item.text}}
+                              <v-btn
+                                flat
+                                small
+                                color="primary"
+                                @click="selecionarDica(item.text)"
+                              >Selecionar</v-btn>
+                            </v-flex>
+                          </v-layout>
+                        </v-timeline-item>
+                      </v-slide-x-reverse-transition>
+                    </v-timeline>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex lg12 md12 xs12>
+        <v-btn color="success" @click="request_tts()">Transformar</v-btn>
+      </v-flex>
+    </v-layout>
+  </v-container>
    `,
   data() {
     return {
