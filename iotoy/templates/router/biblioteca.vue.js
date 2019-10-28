@@ -72,7 +72,7 @@ const Biblioteca = {
                             }
                         )
                     })
-                    this.select_toy = this.list_toy[0]
+                    vm.select_toy = vm.list_toy[0]
                     home.$refs.loading.stop()
                 })
                 .catch(error => {
