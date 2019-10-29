@@ -441,6 +441,7 @@ def text_to_speech_api_list():
         sound = Sound.query.filter_by(toy_id=toy.id, part=part).first()
         response.append({
             "file_name": sound.file_name,
+            "part": part,
             "sound_url": url_for('static', filename='sounds/{}.wav'.format(sound.file_name))
         })
     return jsonify(response)
