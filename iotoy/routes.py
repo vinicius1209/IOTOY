@@ -1,9 +1,9 @@
-from iotoy import app, session, db
-from iotoy.models import User, Toy, Sound, Dica
+from app import app, session, db
+from app.models import User, Toy, Sound, Dica
 from flask import render_template, flash, url_for, request, abort, redirect, jsonify, send_file, send_from_directory, make_response
 from flask_login import current_user, login_user, logout_user, login_required
-from iotoy.watson import WatsonTTS
-from iotoy.sounds import SoundTTS
+from app.watson import WatsonTTS
+from app.sounds import SoundTTS
 import os
 from datetime import datetime
 
@@ -358,14 +358,14 @@ def text_to_speech_post():
                     raise Exception('Erro ao gerar os sons pelo content ser None')
                 
                 # Criar o arquivo em disco
-                file_name = str(toy.id) + str(part) + datetime.now().strftime("%d%m%Y%H%M%S")
+                file_name = str(toy.id) + str(part["value"]) + datetime.now().strftime("%d%m%Y%H%M%S")
                 file_sound = SoundTTS(file_name, content).create()
                 
                 if file_sound:
-                    sound = Sound.query.filter_by(part=part, toy_id=toy.id).first()
+                    sound = Sound.query.filter_by(part=part["value"], toy_id=toy.id).first()
                     if not sound:
                         # Criar o som na base se ele nao existir ainda
-                        sound = Sound(file_name=file_name, part=part, toy_id=selected_toy)
+                        sound = Sound(file_name=file_name, part=part["value"], toy_id=selected_toy)
                         db.session.add(sound)
                         db.session.commit()
                     else:
@@ -441,7 +441,6 @@ def text_to_speech_api_list():
         sound = Sound.query.filter_by(toy_id=toy.id, part=part).first()
         response.append({
             "file_name": sound.file_name,
-            "part": part,
             "sound_url": url_for('static', filename='sounds/{}.wav'.format(sound.file_name))
         })
     return jsonify(response)
