@@ -4,30 +4,49 @@ const TTS = {
     <v-layout row wrap>
       <v-flex lg12 md12 xs12>
         <v-card flat>
+          <v-card-title>
+            <div class="headline"> Criação de falas</div>
+          </v-card-title>
+          <v-divider/>
           <v-card-text>
             <v-layout row wrap>
-              <v-flex lg6 md6 xs12>
+              <v-flex lg12 md12 xs12>
                 <v-combobox
                   v-model="select_toy"
                   :items="list_toy"
                   item-value="id"
                   item-text="text"
                   label="Selecione o brinquedo"
+                  prepend-icon="face"
                   ref="toy_field"
                 ></v-combobox>
-                <v-select
+                <v-combobox
                   v-model="select_part"
                   :items="list_part"
-                  item-value="value"
-                  item-text="text"
-                  chips
                   multiple
+                  chips
+                  clearable
+                  prepend-icon="filter_list"
                   ref="part_field"
-                ></v-select>
+                >
+                 <template v-slot:selection="data">
+                  <v-chip
+                    :selected="data.selected"
+                    text-color="white"
+                    :color="data.item.color"
+                    close
+                    @input="remove(data.item)"
+                  >
+                    <strong>{{ data.item.text }}</strong>&nbsp;
+                  </v-chip>
+                  </template>
+                </v-combobox>
+              </v-flex>
+              <v-flex lg6 md6 xs12>
                 <v-textarea
                   box
-                  label="Digite ou selecione uma fala para ser transformada em áudio"
-                  rows="2"
+                  label="Digite ou selecione uma dica para ser transformada em áudio"
+                  rows="4"
                   auto-grow
                   v-model="input_tts"
                   counter="280"
@@ -35,33 +54,29 @@ const TTS = {
                 ></v-textarea>
               </v-flex>
               <v-flex lg6 md6 xs12>
-                <v-card flat>
-                  <v-card-text>
-                    <v-timeline dense>
-                      <v-slide-x-reverse-transition group hide-on-leave>
-                        <v-timeline-item
-                          v-for="item in dicas"
-                          :key="item.id"
-                          :color="item.color"
-                          small
-                          fill-dot
-                        >
-                          <v-layout justify-space-between>
-                            <v-flex>
-                              {{item.text}}
-                              <v-btn
-                                flat
-                                small
-                                color="primary"
-                                @click="selecionarDica(item.text)"
-                              >Selecionar</v-btn>
-                            </v-flex>
-                          </v-layout>
-                        </v-timeline-item>
-                      </v-slide-x-reverse-transition>
-                    </v-timeline>
-                  </v-card-text>
-                </v-card>
+                <v-timeline dense>
+                  <v-slide-x-reverse-transition group hide-on-leave>
+                    <v-timeline-item
+                      v-for="item in dicas"
+                      :key="item.id"
+                      :color="item.color"
+                      small
+                      fill-dot
+                    >
+                      <v-layout justify-space-between>
+                        <v-flex>
+                          {{item.text}}
+                          <v-btn
+                            flat
+                            small
+                            color="primary"
+                            @click="selecionarDica(item.text)"
+                          >Selecionar</v-btn>
+                        </v-flex>
+                      </v-layout>
+                    </v-timeline-item>
+                  </v-slide-x-reverse-transition>
+                </v-timeline>
               </v-flex>
             </v-layout>
           </v-card-text>
@@ -77,13 +92,18 @@ const TTS = {
     return {
       list_toy: [],
       list_part: [
-        { text: 'Botão A', value: 'botao_a' },
-        { text: 'Botão B', value: 'botao_b' },
-        { text: 'Botão C', value: 'botao_c' },
-        { text: 'Botão D', value: 'botao_d' }
+        { text: 'Botão A', value: 'botao_a', color: 'green' },
+        { text: 'Botão B', value: 'botao_b', color: 'pink' },
+        { text: 'Botão C', value: 'botao_c', color: 'primary' },
+        { text: 'Botão D', value: 'botao_d', color: 'red' }
       ],
       select_toy: null,
-      select_part: ['botao_a', 'botao_b', 'botao_c', 'botao_d'],
+      select_part: [
+        { text: 'Botão A', value: 'botao_a', color: 'green' },
+        { text: 'Botão B', value: 'botao_b', color: 'pink' },
+        { text: 'Botão C', value: 'botao_c', color: 'primary' },
+        { text: 'Botão D', value: 'botao_d', color: 'red' }
+      ],
       input_tts: null,
       responseData: null,
       api_key: null,
@@ -98,7 +118,7 @@ const TTS = {
           text: 'Olá tudo bem?'
         }
       ],
-      nonce: 2
+      nonce: 1
     }
   },
   mounted() {
@@ -114,7 +134,7 @@ const TTS = {
         text: this.dicas_textos[Math.floor(Math.random() * this.dicas_textos.length)]
 	   })
 
-      if (this.nonce > 5) {
+      if (this.nonce > 2) {
         this.dicas.pop()
       }
     },
@@ -235,6 +255,9 @@ const TTS = {
           home.$refs.notification.makeNotification('error', 'Erro ao transformar o texto :(')
           console.log(error)
         });
+    },
+    remove (item) {
+      this.select_part.splice(this.list_part.indexOf(item), 1)
     }
   }
 } 

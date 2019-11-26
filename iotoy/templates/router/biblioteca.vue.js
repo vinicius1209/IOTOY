@@ -71,7 +71,7 @@ const Biblioteca = {
                                 "media": item.media
                             }
                         )
-                    })
+                    })             
                     vm.select_toy = vm.list_toy[0]
                     home.$refs.loading.stop()
                 })
