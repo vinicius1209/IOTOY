@@ -115,7 +115,7 @@ def current_user_info():
 @login_required
 def current_user_config():
     if request.method == 'GET':
-        response = {"api_key": current_user.api_key, "api_url": current_user.api_url}
+        response = {"api_key": current_user.api_key, "api_url": current_user.api_url, "robotic_sound": current_user.robotic_sound}
         return jsonify(response)
     elif request.method == 'POST':
         data = request.get_json(silent=True)
@@ -128,6 +128,7 @@ def current_user_config():
         user = User.query.get(current_user.id)
         user.api_key = data["api_key"]
         user.api_url = data["api_url"]
+        user.robotic_sound = data["robotic_sound"]
         db.session.commit()
 
         return "200"
@@ -359,7 +360,7 @@ def text_to_speech_post():
                 
                 # Criar o arquivo em disco
                 file_name = str(toy.id) + str(part["value"]) + datetime.now().strftime("%d%m%Y%H%M%S")
-                file_sound = SoundTTS(file_name, content).create()
+                file_sound = SoundTTS(file_name, content, current_user.robotic_sound).create()
                 
                 if file_sound:
                     sound = Sound.query.filter_by(part=part["value"], toy_id=toy.id).first()
@@ -372,6 +373,9 @@ def text_to_speech_post():
                         # Delete nos arquivos antigos
                         if os.path.exists(app.config['SOUNDS_URL'] + '/{}.wav'.format(sound.file_name)):
                             os.remove(app.config['SOUNDS_URL'] + '/{}.wav'.format(sound.file_name))
+                        if os.path.exists(app.config['SOUNDS_URL'] + '/temp_{}.wav'.format(sound.file_name)):
+                            os.remove(app.config['SOUNDS_URL'] + '/temp_{}.wav'.format(sound.file_name))
+
                         sound.file_name = file_name
                         db.session.commit()
                 else:

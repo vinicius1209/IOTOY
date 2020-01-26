@@ -9,6 +9,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     api_key = db.Column(db.String(255))
     api_url = db.Column(db.String(255))
+    robotic_sound = db.Column(db.Boolean, unique=False, default=False)
 
     def __repr__(self):
         return '<User {}>'.format(self.username) 
