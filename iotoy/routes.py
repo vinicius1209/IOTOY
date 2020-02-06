@@ -439,6 +439,8 @@ def text_to_speech_api_list():
     mac_address = request.json['mac_address']
     part = request.json['part']
     
+    print(mac_address)
+    
     response = []
     toy = Toy.query.filter_by(mac_address=mac_address).first()
     if toy:
